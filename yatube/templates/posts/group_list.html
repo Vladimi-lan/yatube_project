@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block title %} 
-  <title>Записи сообщества {{group.title}}</title>
+  Записи сообщества {{group.title}}
 {% endblock %}
 {% block content %}
   <!-- класс py-5 создает отступы сверху и снизу блока -->
   <div class="container py-5">
     <h1>Записи сообщества {{ group.title }}</h1>
-    {% for post in posts %}
+    <p> {% if group.description %} {{ group.description }} {% endif %} </p>
+    {% for post in page_obj %}
       <ul>
         <li>
           Автор: {{ post.author.get_full_name }}
@@ -19,5 +20,6 @@
       {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
     <!-- под последним постом нет линии -->
+    {% include 'posts/includes/paginator.html' %} 
   </div>
 {% endblock %}

@@ -14,9 +14,11 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Подключен файл со стандартными стилями бустрап -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    {% block title %}
-        <title>Заголовок не подвезли :(</title>
-    {% endblock %}
+    <title>
+      {% block title %}
+        Заголовок не подвезли :(
+      {% endblock %}
+    </title>
   </head>
   <body>
     <header>
