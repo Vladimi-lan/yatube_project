@@ -24,29 +24,38 @@
                 {% else %}
                   <form method="post" action="{% url 'posts:post_create' %}">
                 {% endif %}
-                {% csrf_token %}            
+                {% csrf_token %}     
                   <div class="form-group row my-3 p-3">
-                    <label for="id_text">
-                      Текст поста                  
-                      <span class="required text-danger" >*</span>                  
-                    </label>                
-                    <small id="id_text-help" class="form-text text-muted">
-                      {{ form.text }}
-                    </small>                  
+                    {% if form.text.label_tag %}
+                      <label>
+                        {{ form.text.label_tag }}
+                        {% if form.text.field.required %}<span class="required text-danger" >*</span>{% endif %}            
+                      </label>
+                    {% endif %}
+                    {{ form.text }}              
+                    {% if form.text.help_text %}
+                      <small class="form-text text-muted">
+                        {{ form.text.help_text }}
+                      </small>  
+                    {% endif %}                
                   </div>            
                   <div class="form-group row my-3 p-3">
-                    <label for="id_group">
-                      Group                  
-                    </label>
-                    <select name="group" class="form-control" id="id_group">
-                      <option value={{groups}} selected>---------</option>
+                    {% if form.group.label_tag %}
+                      <label>
+                        {{ form.group.label_tag }}
+                        {% if form.group.field.required %}<span class="required text-danger" >*</span>{% endif %}                
+                      </label>
+                    {% endif %}
+                    <select class="form-control">
                       {% for group in form.group %}
-                      <option>{{ group }}</option>
+                        <option>{{ group }}</option>
                       {% endfor %}
                     </select>
-                    <small id="id_group-help" class="form-text text-muted">
-                      Группа, к которой будет относиться пост
-                    </small>
+                    {% if form.group.help_text %}
+                      <small class="form-text text-muted">
+                        {{ form.group.help_text }}
+                      </small>  
+                    {% endif %}
                   </div>
                   <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">
