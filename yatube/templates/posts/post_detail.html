@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
+{% load user_filters %}
 {% block title %} 
   Пост {{ post|truncatechars:30 }}
 {% endblock %}
@@ -32,9 +34,49 @@
           </ul>
         </aside>
         <article class="col-12 col-md-9">
+          {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+            <img class="card-img my-2" src="{{ im.url }}">
+          {% endthumbnail %}
           <p>
            {{ post.text }} 
           </p>
+          {% if user == post.author %}
+            <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+              редактировать запись
+            </a>
+          {% endif %}
+          {% if user.is_authenticated %}
+            <div class="card my-4">
+              <h5 class="card-header">Добавить комментарий:</h5>
+              <div class="card-body">
+                <!-- action ведет на обработчик формы  -->
+                <form method="post" action="{% url 'posts:add_comment' post.id %}">
+                  <!-- не забываем генерировать токен!  -->
+                  {% csrf_token %}      
+                  <div class="form-group mb-2">
+                    {% if form.text.label_tag %}
+                      <label>
+                        {{ form.text.label_tag }}
+                        {% if form.text.field.required %}<span class="required text-danger" >*</span>{% endif %}            
+                      </label>
+                    {% endif %}
+                    {{ form.text|addclass:"form-control" }}              
+                    {% if form.text.help_text %}
+                      <small class="form-text text-muted">
+                        {{ form.text.help_text }}
+                      </small>  
+                    {% endif %}
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                      Отправить
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+          {% include 'posts/includes/comments.html' %}
         </article>
       </div> 
 {% endblock %}

@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load cache %}
+{% load thumbnail %}
 {% block title %} 
   Последние обновления на странице
 {% endblock %}
@@ -6,22 +8,30 @@
   <!-- класс py-5 создает отступы сверху и снизу блока -->
   <div class="container py-5">
     <h1>Последние обновления на сайте</h1>
+    {% include 'posts/includes/switcher.html' %}
+    {% cache 20 index_page page_obj.number %}
     {% for post in page_obj %}
       <ul>
         <li>
           Автор: {{ post.author.get_full_name }}
+          <a href="{% url 'posts:profile' post.author %}">Все посты пользователя</a>
         </li>
         <li>
           Дата публикации: {{ post.pub_date|date:"d E Y" }}
         </li>
       </ul>
+      {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+        <img class="card-img my-2" src="{{ im.url }}">
+      {% endthumbnail %}
       <p>{{ post.text }}</p>
-      {% if post.group.slug %}    
+      <a href="{% url 'posts:post_detail' post.id %}">Подробная информация</a><br>
+      {% if post.group %}    
         <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>
       {% endif %}
       {% if not forloop.last %}<hr>{% endif %}
       <!-- под последним постом нет линии -->
     {% endfor %}
+    {% endcache %}
     {% include 'posts/includes/paginator.html' %}
   </div>
 {% endblock %}

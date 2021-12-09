@@ -20,9 +20,9 @@
               </div>
               <div class="card-body">
                 {% if is_edit %}        
-                  <form method="post" action="{% url 'posts:post_edit' post.id %}">
+                  <form method="post" action="{% url 'posts:post_edit' post.id %}" enctype="multipart/form-data">
                 {% else %}
-                  <form method="post" action="{% url 'posts:post_create' %}">
+                  <form method="post" action="{% url 'posts:post_create' %}" enctype="multipart/form-data">
                 {% endif %}
                 {% csrf_token %}     
                   <div class="form-group row my-3 p-3">
@@ -46,7 +46,7 @@
                         {% if form.group.field.required %}<span class="required text-danger" >*</span>{% endif %}                
                       </label>
                     {% endif %}
-                    <select class="form-control">
+                    <select name="group" class="form-control">
                       {% for group in form.group %}
                         <option>{{ group }}</option>
                       {% endfor %}
@@ -54,6 +54,20 @@
                     {% if form.group.help_text %}
                       <small class="form-text text-muted">
                         {{ form.group.help_text }}
+                      </small>  
+                    {% endif %}
+                  </div>
+                  <div class="form-group row my-3 p-3">
+                    {% if form.image.label_tag %}
+                      <label>
+                        {{ form.image.label_tag }}
+                        {% if form.group.field.required %}<span class="required text-danger" >*</span>{% endif %}                
+                      </label>
+                    {% endif %}
+                    {{ form.image }}
+                    {% if form.image.help_text %}
+                      <small class="form-text text-muted">
+                        {{ form.image.help_text }}
                       </small>  
                     {% endif %}
                   </div>
